@@ -20,7 +20,8 @@ void sort(int* a, int* b, int* c){
 
 int main(int argc,char* argv[]){
 	if(argc-1 != 3){
-		printf("Error: The number of input integers now is %d. Please input 3 integers", argc-1);
+		printf("Error: The number of input integers now is %d. Please input 3 integers.\n", argc-1);
+		exit(0);
 	}
 
   int size_data = 2 * sizeof(int);
