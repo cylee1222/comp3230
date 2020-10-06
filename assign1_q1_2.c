@@ -22,8 +22,8 @@ int main(int argc, char* argv[])
     int shmid = shmget(IPC_PRIVATE, size_data, 0666 | IPC_CREAT);
 
     pid_t fpid = fork();
-    if(fpid < 0) exit(0);
-    else if(fpid == 0){
+    
+    if(fpid == 0){
 
       differ = shmat(shmid, 0, 0);
       printf("Receive a SIGCONT.\n");
@@ -35,7 +35,6 @@ int main(int argc, char* argv[])
       else
         printf("The 3rd argument is smaller than the 1st argument.\n\n");
       shmdt(differ);
-      kill(getpid(), SIGSTOP);
       exit(0);
       
     }else{
@@ -52,7 +51,6 @@ int main(int argc, char* argv[])
         printf("Send a SIGCONT to process %d.\n\n", fpid);
         shmdt(differ);
         kill(fpid, SIGCONT);
-        kill(getpid(), SIGSTOP);
         exit(0);
 
       }else{
@@ -69,16 +67,12 @@ int main(int argc, char* argv[])
         printf("Send a SIGCONT to process %d.\n\n", fpid1);
 
         kill(fpid1, SIGCONT);
-        waitpid(fpid1, 0, WUNTRACED);
-        waitpid(fpid, 0, WUNTRACED);
         pid_t pid;
         
-        kill(fpid1, SIGCONT);
-        pid = waitpid(fpid1, 0, 0);
+        pid = wait(NULL);
         printf("Exited Process ID: %d; Count: %d.\n", pid, ++count);
 
-        kill(fpid, SIGCONT);
-        pid = waitpid(fpid, 0, 0);
+        pid = wait(NULL);
         printf("Exited Process ID: %d; Count: %d.", pid, ++count);
 
         shmdt(differ);
